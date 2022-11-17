@@ -1,0 +1,14 @@
+---
+- name: Gather legacy and resource facts
+  hosts: all_devices
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+
+    - name: Gather legacy and resource facts
+      register: iosfacts_out
+      cisco.ios.ios_facts:
+        gather_subset: 
+        - '!hardware'
+    - copy: content="{{ iosfacts_out | to_nice_json }}" dest="output/{{inventory_hostname}}_iosfacts2.json"
