@@ -1,8 +1,8 @@
 ---
 - name: show version and other user level commands
-  hosts: online
+  hosts: all_devices
   gather_facts: false
-  connection: local
+  connection: network_cli
 
   tasks:
     - name: run multiple commands on remote nodes
