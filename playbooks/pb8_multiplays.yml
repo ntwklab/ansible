@@ -1,0 +1,39 @@
+--- 
+- name: Play1 - Manage GNS3 devices 
+  hosts: 172.16.1.104 
+  gather_facts: false 
+  connection: network_cli 
+
+  tasks: 
+    - name: enable ospf 
+      ios_config: 
+        parents: router ospf 1 
+        lines: 
+          - network 0.0.0.0 255.255.255.255 area 0
+      become: yes
+      become_method: enable
+
+      register: print_output 
+
+    -  debug: var=print_output 
+
+
+- name: Play 2 - Switch specific config 
+  hosts: 172.16.1.103, 172.16.1.124
+  gather_facts: false 
+  connection: network_cli 
+
+  tasks: 
+    - name: Create VLANs 
+      ios_config: 
+        lines: 
+          - vlan 200 
+          - vlan 201
+          - vlan 202 
+          - vlan 203
+      become: yes
+      become_method: enable
+
+      register: print_output 
+
+    -  debug: var=print_output 
