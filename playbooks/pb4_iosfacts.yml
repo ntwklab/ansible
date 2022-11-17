@@ -1,0 +1,12 @@
+---
+- name: Gather legacy and resource facts
+  hosts: all_devices
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: ssh facts
+      register: iosfacts_out
+      ios_facts:
+    - copy: content="{{ iosfacts_out | to_nice_json }}" dest="output/{{inventory_hostname}}_iosfacts.json"
+
