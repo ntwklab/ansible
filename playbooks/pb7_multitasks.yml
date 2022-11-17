@@ -1,0 +1,47 @@
+---
+- name: Manage GNS3 devices
+  hosts: lab_access
+  gather_facts: false
+  connection: network_cli
+
+  tasks: 
+    - name: TASK1 - Global config settings 
+      ios_config: 
+        lines: 
+          - vtp mode transparent 
+          - spanning-tree mode rapid-pvst 
+          - errdisable recovery cause all 
+          - port-channel load-balance src-dst-ip 
+          - ip name-server 8.8.8.8 
+
+          - snmp-server community python1 RO 
+          - snmp-server community python2 RW 
+
+
+      become: yes
+      become_method: enable
+ 
+      register: print_output 
+
+    -  debug: var=print_output 
+
+
+
+    - name: TASK2 - Global config settings 
+      ios_config: 
+        parents: ipv6 nd raguard policy HOST_POLICY  
+        lines: 
+          - ntp server 87.81.181.2 
+          - ntp update-calendar 
+
+          - clock timezone PST -8 
+          - clock summer-time PDT recurring 
+          - service timestamps debug datetime msec localtime 
+          - service timestamps log datetime msec localtime 
+      become: yes
+      become_method: enable
+
+
+      register: print_output 
+
+    -  debug: var=print_output 
